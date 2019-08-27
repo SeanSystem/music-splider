@@ -1,3 +1,4 @@
+/*
 package com.example.musicsplider.config;
 
 import com.example.musicsplider.task.MusicDataFecthTask;
@@ -7,12 +8,14 @@ import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+*/
 /**
  * Quartz配置类
  *
  * @author Sean
  * @date 2019/08/27
- */
+ *//*
+
 
 @Configuration
 public class QuartzConfig {
@@ -33,7 +36,7 @@ public class QuartzConfig {
         CronTriggerFactoryBean triggerFactoryBean = new CronTriggerFactoryBean();
         triggerFactoryBean.setJobDetail(detailFactoryBean.getObject());
         // 设置表达式,每3秒执行一次
-        triggerFactoryBean.setCronExpression("0/5 * * * * ?");
+        triggerFactoryBean.setCronExpression("0/1 * * * * ?");
         triggerFactoryBean.setName("fetchMusicData");
         return triggerFactoryBean;
     }
@@ -50,3 +53,4 @@ public class QuartzConfig {
         return bean;
     }
 }
+*/

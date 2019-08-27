@@ -34,6 +34,6 @@ public class MusicDataFecthTask {
                 System.exit(0);
             }
         }
-        System.out.println("测试定时任务调度");
+        System.out.println("爬取数据完成！");
     }
 }

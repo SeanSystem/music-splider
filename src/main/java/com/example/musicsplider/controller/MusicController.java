@@ -1,5 +1,6 @@
 package com.example.musicsplider.controller;
 
+import com.example.musicsplider.entity.AplayerMusicData;
 import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -9,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 /**
@@ -31,6 +32,7 @@ public class MusicController {
     private static final Integer DEFAULT_PAGE_SIZE = 20;
 
     @GetMapping("/search")
+    @CrossOrigin
     public List<MusicData> search(Integer pageNum, Integer pageSize, String queryString) {
         if (null == pageNum) {
             pageNum = 0;
@@ -40,6 +42,19 @@ public class MusicController {
         }
         SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
         return musicService.search(searchQuery);
+    }
+
+    @GetMapping("/searchAplayer")
+    @CrossOrigin
+    public List<AplayerMusicData> searchAplayer(Integer pageNum, Integer pageSize, String queryString){
+        if (null == pageNum) {
+            pageNum = 0;
+        }
+        if (null == pageSize) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+        SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
+        return musicService.searchAplayer(searchQuery);
     }
 
     private SearchQuery getSearchQuery(Integer pageNum, Integer pageSize, String queryString) {
