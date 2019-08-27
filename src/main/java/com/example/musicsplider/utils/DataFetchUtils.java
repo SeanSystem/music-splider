@@ -17,23 +17,37 @@ import java.util.List;
  */
 public class DataFetchUtils {
 
-    private static final String MUSIC_URL="http://www.ytmp3.cn/shou/yt.php";
+    private static final String MUSIC_URL = "http://www.ytmp3.cn/shou/yt.php";
 
-    public static List<MusicData> getMusicData(){
-
-        return null;
+    private DataFetchUtils() {
     }
 
-    private static String getDataFromUrl(String url){
+    /**
+     * 获取音乐数据
+     *
+     * @return
+     */
+    public static List<MusicData> getMusicData() {
+        String dataFromUrl = getDataFromUrl(MUSIC_URL);
+        return formatData(dataFromUrl);
+    }
+
+    /**
+     * 获取音乐接口原始数据
+     *
+     * @param url
+     * @return
+     */
+    private static String getDataFromUrl(String url) {
         InputStream is = null;
         ByteArrayOutputStream baos = null;
         try {
             URL rurl = new URL(url);
-            HttpURLConnection urlConnection = (HttpURLConnection)rurl.openConnection();
+            HttpURLConnection urlConnection = (HttpURLConnection) rurl.openConnection();
             urlConnection.connect();
-            if (urlConnection.getResponseCode() == 200){
+            if (urlConnection.getResponseCode() == 200) {
                 is = urlConnection.getInputStream();
-               baos = new ByteArrayOutputStream();
+                baos = new ByteArrayOutputStream();
                 //10MB的缓存
                 byte[] buffer = new byte[10485760];
                 int len = 0;
@@ -42,33 +56,42 @@ public class DataFetchUtils {
                 }
                 return baos.toString().trim();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (baos != null){
+                if (baos != null) {
                     baos.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                if (is != null){
+                if (is != null) {
                     is.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return null;
     }
 
-    private static List<MusicData> formatData(String data){
-       String[] split = data.replace("DATA(","").replace(")","").replace("\n","")
-               .replace("\"","").split(";");
+    /**
+     * 格式化原始数据
+     *
+     * @param data
+     * @return
+     */
+    private static List<MusicData> formatData(String data) {
+        String[] split = data.replace("DATA(", "").replace(")", "").replace("\n", "")
+                .replace("\"", "").split(";");
         ArrayList<MusicData> list = new ArrayList();
         for (String str : split) {
             String[] split1 = str.split(",");
+            if (split1.length != 3) {
+                continue;
+            }
             MusicData musicData = new MusicData();
             musicData.setTitle(split1[0]);
             musicData.setUrl(split1[1]);
