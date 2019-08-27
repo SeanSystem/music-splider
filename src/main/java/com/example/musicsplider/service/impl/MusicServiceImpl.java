@@ -6,6 +6,7 @@ import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
@@ -41,15 +42,33 @@ public class MusicServiceImpl implements MusicService {
         try {
             Page<MusicData> search = musicRepository.search(query);
             List<MusicData> content = search.getContent();
-            for (MusicData music : content) {
-                AplayerMusicData aplayerMusicData = new AplayerMusicData();
-                aplayerMusicData.setName(music.getTitle());
-                aplayerMusicData.setArtist("");
-                aplayerMusicData.setUrl(music.getUrl());
-                list.add(aplayerMusicData);
-            }
+            return formatData(list, content);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<AplayerMusicData> getAplayerRandomMusic(Pageable pageable) {
+        ArrayList<AplayerMusicData> list = new ArrayList<>();
+        try {
+            Page<MusicData> all = musicRepository.findAll(pageable);
+            List<MusicData> content = all.getContent();
+            return formatData(list, content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private List<AplayerMusicData> formatData(ArrayList<AplayerMusicData> list, List<MusicData> content) {
+        for (MusicData music : content) {
+            AplayerMusicData aplayerMusicData = new AplayerMusicData();
+            aplayerMusicData.setName(music.getTitle());
+            aplayerMusicData.setArtist("");
+            aplayerMusicData.setUrl(music.getUrl());
+            list.add(aplayerMusicData);
         }
         return list;
     }

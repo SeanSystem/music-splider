@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 音乐查询接口
@@ -55,6 +56,14 @@ public class MusicController {
         }
         SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
         return musicService.searchAplayer(searchQuery);
+    }
+
+    @GetMapping("/getRandom")
+    @CrossOrigin
+    public List<AplayerMusicData> getRandomMusic(Integer pageSize){
+        Integer pageNum = new Random().nextInt(100);
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
+        return musicService.getAplayerRandomMusic(pageRequest);
     }
 
     private SearchQuery getSearchQuery(Integer pageNum, Integer pageSize, String queryString) {
