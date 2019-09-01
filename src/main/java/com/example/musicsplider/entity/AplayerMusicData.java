@@ -3,6 +3,7 @@ package com.example.musicsplider.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * aplayer播放器数据格式

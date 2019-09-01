@@ -3,6 +3,7 @@ package com.example.musicsplider.controller;
 import com.example.musicsplider.entity.AplayerMusicData;
 import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
+import com.example.musicsplider.thread.MusicFetchThread;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -29,6 +30,8 @@ public class MusicController {
 
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private MusicFetchThread musicFetchThread;
 
     private static final Integer DEFAULT_PAGE_SIZE = 20;
 
@@ -64,6 +67,13 @@ public class MusicController {
         Integer pageNum = new Random().nextInt(100);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
         return musicService.getAplayerRandomMusic(pageRequest);
+    }
+
+    @GetMapping("fetchMusic")
+    public String fetchMusic()
+    {
+        musicFetchThread.start();
+        return "success";
     }
 
     private SearchQuery getSearchQuery(Integer pageNum, Integer pageSize, String queryString) {
