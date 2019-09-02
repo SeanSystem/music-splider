@@ -4,17 +4,24 @@ import com.example.musicsplider.entity.AplayerMusicData;
 import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import com.example.musicsplider.thread.MusicFetchThread;
+import com.example.musicsplider.utils.EsQueryUtils;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -57,8 +64,14 @@ public class MusicController {
         if (null == pageSize) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
-        return musicService.searchAplayer(searchQuery);
+        //SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
+        NativeSearchQuery query = EsQueryUtils.query();
+        query.setPageable(PageRequest.of(pageNum, pageSize));
+        FilterAggregationBuilder filter = AggregationBuilders.filter("findMusic", QueryBuilders.matchQuery("title", queryString));
+        ArrayList<AbstractAggregationBuilder> list = new ArrayList<>();
+        list.add(filter);
+        query.setAggregations(list);
+        return musicService.searchAplayer(query);
     }
 
     @GetMapping("/getRandom")
