@@ -1,0 +1,13 @@
+server:
+  port: 8090
+#es地址
+spring:
+  data:
+    elasticsearch:
+      cluster-nodes: 114.115.217.85:9300
+      cluster-name: docker-cluster #es集群名
+#音乐接口url
+music:
+  fetch:
+    url: http://www.ytmp3.cn/shou/yt.php
+

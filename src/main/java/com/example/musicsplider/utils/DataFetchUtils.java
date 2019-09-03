@@ -15,9 +15,9 @@ import java.util.List;
  * @author Sean
  * 2019/08/26
  */
-public class DataFetchUtils {
+public final class DataFetchUtils {
 
-    private static final String MUSIC_URL = "http://www.ytmp3.cn/shou/yt.php";
+    private static final String MUSIC_URL = (String) PropertiesUtils.getCommonYml("music.fetch.url", "application.yml");
 
     private DataFetchUtils() {
     }
