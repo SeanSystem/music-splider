@@ -17,15 +17,6 @@ public final class EsQueryUtils {
     }
 
     /**
-     * 获取query对象
-     *
-     * @return query对象
-     */
-    public static NativeSearchQuery query() {
-        return new NativeSearchQueryBuilder().build();
-    }
-
-    /**
      * 获取mathch查询
      *
      * @param filedName 文档字段

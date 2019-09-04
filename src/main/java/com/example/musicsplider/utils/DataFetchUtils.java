@@ -84,6 +84,9 @@ public final class DataFetchUtils {
      * @return
      */
     private static List<MusicData> formatData(String data) {
+        if(data == null || "".equals(data.trim())){
+            return null;
+        }
         String[] split = data.replace("DATA(", "").replace(")", "").replace("\n", "")
                 .replace("\"", "").split(";");
         ArrayList<MusicData> list = new ArrayList();
@@ -93,9 +96,9 @@ public final class DataFetchUtils {
                 continue;
             }
             MusicData musicData = new MusicData();
-            musicData.setTitle(split1[0]);
-            musicData.setUrl(split1[1]);
-            musicData.setId(split1[2]);
+            musicData.setTitle(split1[0].trim());
+            musicData.setUrl(split1[1].trim());
+            musicData.setId(split1[2].trim());
             list.add(musicData);
         }
         return list;

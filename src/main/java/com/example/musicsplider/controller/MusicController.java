@@ -5,6 +5,8 @@ import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import com.example.musicsplider.thread.MusicFetchThread;
 import com.example.musicsplider.utils.EsQueryUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.java2d.loops.ProcessPath;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +65,12 @@ public class MusicController {
         if (null == pageSize) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        //SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
-        NativeSearchQuery query = EsQueryUtils.query();
-        query.setPageable(PageRequest.of(pageNum, pageSize));
-        FilterAggregationBuilder filter = AggregationBuilders.filter("findMusic", QueryBuilders.matchQuery("title", queryString));
-        ArrayList<AbstractAggregationBuilder> list = new ArrayList<>();
-        list.add(filter);
-        query.setAggregations(list);
+        //filter查询方式
+        NativeSearchQuery query = EsQueryUtils.boolQuery();
+        BoolQueryBuilder boolQueryBuilder = (BoolQueryBuilder)query.getQuery();
+        boolQueryBuilder.filter(QueryBuilders.termQuery("title",queryString));
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
+        query.setPageable(pageRequest);
         return musicService.searchAplayer(query);
     }
 
