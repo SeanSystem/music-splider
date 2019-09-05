@@ -82,4 +82,15 @@ public final class EsQueryUtils {
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(QueryBuilders.simpleQueryStringQuery(content));
         return new NativeSearchQueryBuilder().withQuery(functionScoreQueryBuilder).build();
     }
+
+    /**
+     * 获取rangeQuery对象
+     *
+     * @param fieldName 文档字段
+     * @return rangeQuery对象
+     */
+    public static NativeSearchQuery rangeQuery(String fieldName) {
+        RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(fieldName);
+        return new NativeSearchQueryBuilder().withQuery(rangeQueryBuilder).build();
+    }
 }

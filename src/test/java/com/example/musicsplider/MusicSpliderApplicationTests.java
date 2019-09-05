@@ -8,6 +8,7 @@ import com.example.musicsplider.utils.EsQueryUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountAggregationBuilder;
 import org.junit.Test;
@@ -45,4 +46,12 @@ public class MusicSpliderApplicationTests {
         System.out.println();
     }
 
+    @Test
+    public void testRange(){
+        NativeSearchQuery query = EsQueryUtils.rangeQuery("id");
+       RangeQueryBuilder queryBuilder =  (RangeQueryBuilder)query.getQuery();
+       queryBuilder.from("53454").to("53484");
+        Page<MusicData> search = repository.search(query);
+        System.out.println();
+    }
 }
