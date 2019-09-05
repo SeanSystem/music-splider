@@ -5,6 +5,7 @@ import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import com.example.musicsplider.thread.MusicFetchThread;
 import com.example.musicsplider.utils.EsQueryUtils;
+import com.example.musicsplider.vo.AplayerVO;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -58,17 +59,14 @@ public class MusicController {
 
     @GetMapping("/searchAplayer")
     @CrossOrigin
-    public List<AplayerMusicData> searchAplayer(Integer pageNum, Integer pageSize, String queryString){
+    public AplayerVO searchAplayer(Integer pageNum, Integer pageSize, String queryString){
         if (null == pageNum) {
             pageNum = 0;
         }
         if (null == pageSize) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        //filter查询方式
-        NativeSearchQuery query = EsQueryUtils.boolQuery();
-        BoolQueryBuilder boolQueryBuilder = (BoolQueryBuilder)query.getQuery();
-        boolQueryBuilder.filter(QueryBuilders.termQuery("title",queryString));
+        NativeSearchQuery query = EsQueryUtils.mathQuery("title", queryString);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
         query.setPageable(pageRequest);
         return musicService.searchAplayer(query);
@@ -76,17 +74,27 @@ public class MusicController {
 
     @GetMapping("/getRandom")
     @CrossOrigin
-    public List<AplayerMusicData> getRandomMusic(Integer pageSize){
+    public AplayerVO getRandomMusic(Integer pageSize){
+        if(pageSize == null){
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
         Integer pageNum = new Random().nextInt(100);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
         return musicService.getAplayerRandomMusic(pageRequest);
     }
 
     @GetMapping("fetchMusic")
+    @CrossOrigin
     public String fetchMusic()
     {
         musicFetchThread.start();
         return "success";
+    }
+
+    @GetMapping("/count")
+    @CrossOrigin
+    public long getCount(){
+        return musicService.getCount();
     }
 
     private SearchQuery getSearchQuery(Integer pageNum, Integer pageSize, String queryString) {
