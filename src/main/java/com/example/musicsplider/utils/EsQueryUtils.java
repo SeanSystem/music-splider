@@ -51,6 +51,18 @@ public final class EsQueryUtils {
     }
 
     /**
+     * 获取termsQuery查询
+     *
+     * @param filedName 文档字段
+     * @param values    内容
+     * @return termsQuery对象
+     */
+    public static NativeSearchQuery termsQuery(String filedName, String... values) {
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(filedName, values);
+        return new NativeSearchQueryBuilder().withQuery(termsQueryBuilder).build();
+    }
+
+    /**
      * 获取fuzzyQuery对象
      *
      * @param filedName 文档字段
