@@ -62,14 +62,8 @@ public class MusicController {
         if (null == pageSize) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        //SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
-        NativeSearchQuery query = EsQueryUtils.query();
-        query.setPageable(PageRequest.of(pageNum, pageSize));
-        FilterAggregationBuilder filter = AggregationBuilders.filter("findMusic", QueryBuilders.matchQuery("title", queryString));
-        ArrayList<AbstractAggregationBuilder> list = new ArrayList<>();
-        list.add(filter);
-        query.setAggregations(list);
-        return musicService.searchAplayer(query);
+        SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
+        return musicService.searchAplayer(searchQuery);
     }
 
     @GetMapping("/getRandom")
@@ -81,6 +75,7 @@ public class MusicController {
     }
 
     @GetMapping("fetchMusic")
+    @CrossOrigin
     public String fetchMusic()
     {
         musicFetchThread.start();

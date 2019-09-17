@@ -25,9 +25,6 @@ public class MusicFetchThread extends Thread {
     public void run() {
         while (true){
             List<MusicData> musicData = DataFetchUtils.getMusicData();
-            if(musicRepository == null){
-                System.out.println("empty");
-            }
             if (null != musicData && musicData.size() > 0) {
                 try {
                     musicRepository.saveAll(musicData);
