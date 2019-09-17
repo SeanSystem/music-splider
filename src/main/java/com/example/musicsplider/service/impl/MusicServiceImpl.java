@@ -4,6 +4,7 @@ import com.example.musicsplider.dao.MusicRepository;
 import com.example.musicsplider.entity.AplayerMusicData;
 import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
+import com.example.musicsplider.vo.AplayerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,29 +38,36 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
-    public List<AplayerMusicData> searchAplayer(SearchQuery query) {
+    public AplayerVO searchAplayer(SearchQuery query) {
         ArrayList<AplayerMusicData> list = new ArrayList<>();
+        AplayerVO aplayerVO = new AplayerVO();
         try {
             Page<MusicData> search = musicRepository.search(query);
             List<MusicData> content = search.getContent();
-            return formatData(list, content);
+            List<AplayerMusicData> aplayerMusicData = formatData(list, content);
+            aplayerVO.setList(aplayerMusicData);
+            aplayerVO.setTotal(search.getTotalElements());
+           // aplayerVO.setTotal(search.get);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+        return aplayerVO;
     }
 
     @Override
-    public List<AplayerMusicData> getAplayerRandomMusic(Pageable pageable) {
+    public AplayerVO getAplayerRandomMusic(Pageable pageable) {
         ArrayList<AplayerMusicData> list = new ArrayList<>();
+        AplayerVO aplayerVO = new AplayerVO();
         try {
             Page<MusicData> all = musicRepository.findAll(pageable);
             List<MusicData> content = all.getContent();
-            return formatData(list, content);
+            List<AplayerMusicData> aplayerMusicData = formatData(list, content);
+            aplayerVO.setList(aplayerMusicData);
+            aplayerVO.setTotal(all.getTotalElements());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+        return aplayerVO;
     }
 
     private List<AplayerMusicData> formatData(ArrayList<AplayerMusicData> list, List<MusicData> content) {
@@ -71,5 +79,10 @@ public class MusicServiceImpl implements MusicService {
             list.add(aplayerMusicData);
         }
         return list;
+    }
+
+    @Override
+    public long getCount() {
+        return musicRepository.count();
     }
 }

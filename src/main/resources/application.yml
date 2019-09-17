@@ -1,12 +1,12 @@
 server:
   port: 8090
-#esµØÖ·
+#esåœ°å€
 spring:
   data:
     elasticsearch:
       cluster-nodes: 114.115.217.85:9300
-      cluster-name: docker-cluster #es¼¯ÈºÃû
-#ÒôÀÖ½Ó¿Úurl
+      cluster-name: docker-cluster #esé›†ç¾¤å
+#è·å–éŸ³ä¹æ¥å£url
 music:
   fetch:
     url: http://www.ytmp3.cn/shou/yt.php

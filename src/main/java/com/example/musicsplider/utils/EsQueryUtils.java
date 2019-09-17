@@ -17,15 +17,6 @@ public final class EsQueryUtils {
     }
 
     /**
-     * 获取query对象
-     *
-     * @return query对象
-     */
-    public static NativeSearchQuery query() {
-        return new NativeSearchQueryBuilder().build();
-    }
-
-    /**
      * 获取mathch查询
      *
      * @param filedName 文档字段
@@ -60,6 +51,18 @@ public final class EsQueryUtils {
     }
 
     /**
+     * 获取termsQuery查询
+     *
+     * @param filedName 文档字段
+     * @param values    内容
+     * @return termsQuery对象
+     */
+    public static NativeSearchQuery termsQuery(String filedName, String... values) {
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery(filedName, values);
+        return new NativeSearchQueryBuilder().withQuery(termsQueryBuilder).build();
+    }
+
+    /**
      * 获取fuzzyQuery对象
      *
      * @param filedName 文档字段
@@ -90,5 +93,16 @@ public final class EsQueryUtils {
     public static NativeSearchQuery functionScoreQuery(String content) {
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(QueryBuilders.simpleQueryStringQuery(content));
         return new NativeSearchQueryBuilder().withQuery(functionScoreQueryBuilder).build();
+    }
+
+    /**
+     * 获取rangeQuery对象
+     *
+     * @param fieldName 文档字段
+     * @return rangeQuery对象
+     */
+    public static NativeSearchQuery rangeQuery(String fieldName) {
+        RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(fieldName);
+        return new NativeSearchQueryBuilder().withQuery(rangeQueryBuilder).build();
     }
 }

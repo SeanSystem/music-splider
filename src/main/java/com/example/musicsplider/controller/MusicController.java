@@ -1,16 +1,13 @@
 package com.example.musicsplider.controller;
 
-import com.example.musicsplider.entity.AplayerMusicData;
 import com.example.musicsplider.entity.MusicData;
 import com.example.musicsplider.service.MusicService;
 import com.example.musicsplider.thread.MusicFetchThread;
 import com.example.musicsplider.utils.EsQueryUtils;
+import com.example.musicsplider.vo.AplayerVO;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.*;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -55,20 +50,25 @@ public class MusicController {
 
     @GetMapping("/searchAplayer")
     @CrossOrigin
-    public List<AplayerMusicData> searchAplayer(Integer pageNum, Integer pageSize, String queryString){
+    public AplayerVO searchAplayer(Integer pageNum, Integer pageSize, String queryString){
         if (null == pageNum) {
             pageNum = 0;
         }
         if (null == pageSize) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        SearchQuery searchQuery = getSearchQuery(pageNum, pageSize, queryString);
-        return musicService.searchAplayer(searchQuery);
+        NativeSearchQuery query = EsQueryUtils.mathQuery("title", queryString);
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
+        query.setPageable(pageRequest);
+        return musicService.searchAplayer(query);
     }
 
     @GetMapping("/getRandom")
     @CrossOrigin
-    public List<AplayerMusicData> getRandomMusic(Integer pageSize){
+    public AplayerVO getRandomMusic(Integer pageSize){
+        if(pageSize == null){
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
         Integer pageNum = new Random().nextInt(100);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
         return musicService.getAplayerRandomMusic(pageRequest);
@@ -80,6 +80,12 @@ public class MusicController {
     {
         musicFetchThread.start();
         return "success";
+    }
+
+    @GetMapping("/count")
+    @CrossOrigin
+    public long getCount(){
+        return musicService.getCount();
     }
 
     private SearchQuery getSearchQuery(Integer pageNum, Integer pageSize, String queryString) {
